@@ -7,7 +7,7 @@ namespace ConsoleToWebAPI.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        [Route("{id:int}")]
+        [Route("{id:int:min(10):max(20)}")]
         public string GetById(int id)
         {
             return "hello int " + id;
@@ -18,5 +18,6 @@ namespace ConsoleToWebAPI.Controllers
         {
             return "hello string " + id;
         }
+
     }
 }
