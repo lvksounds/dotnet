@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ConsoleToWebAPI.Controllers
 {
@@ -28,7 +29,7 @@ namespace ConsoleToWebAPI.Controllers
         [Route("test")]
         public IActionResult GetAnimalsTest()
         {
-            return AcceptedAtRoute("All");
+            return LocalRedirect("~/api/animals");
         }
 
         [Route("{name}")]
@@ -39,6 +40,30 @@ namespace ConsoleToWebAPI.Controllers
                 return BadRequest();
             }
             return Ok(name);
+        }
+
+        [Route("{id:int}")]
+        public IActionResult GetAnimalsById(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+            var animal = animals.FirstOrDefault(x => x.Id == id);
+
+            if (animal == null)
+            {
+                return NotFound("No animal with this ID");
+            }
+            return Ok(animal);
+        }
+
+        [HttpPost("")]
+        public IActionResult GetAnimals(AnimalModel animal)
+        {
+            animals.Add(animal);
+
+            return CreatedAtAction("GetAnimalsById", new { id = animal.Id } , animal);
         }
     }
 }
